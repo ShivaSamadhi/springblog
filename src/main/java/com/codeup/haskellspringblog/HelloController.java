@@ -36,4 +36,23 @@ public class HelloController {
     public String chooseNum(){
         return "roll-dice";
     }
+
+    @GetMapping("/roll-dice/{number}")
+    public String rollDice(@PathVariable String number, Model model) {
+
+        int diceRoll = (int)(Math.random()*6)+1;
+
+        boolean youWin = Integer.parseInt(number) == diceRoll;
+
+        String win;
+        if(youWin) {
+           win = "You Won";
+        }
+        else{
+            win = "You Lose";
+        }
+
+        model.addAttribute("number","You guessed "+ number+ ". The dice roll was "+ diceRoll+ ". "+ win);
+        return "roll-dice";
+    }
 }
