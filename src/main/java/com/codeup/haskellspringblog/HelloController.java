@@ -31,4 +31,9 @@ public class HelloController {
         model.addAttribute("cohort", "Welcome to "+ cohort+ "!");
         return "join";
     }
+
+    @GetMapping("/roll-dice")
+    public String chooseNum(){
+        return "roll-dice";
+    }
 }
