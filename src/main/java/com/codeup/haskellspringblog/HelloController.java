@@ -16,6 +16,11 @@ public class HelloController {
         return "hello";
     }
 
+    @GetMapping("/welcome")
+    public String welcome(){
+        return "welcome";
+    }
+
     @GetMapping("/join")
     public String showJoinForm(){
         return "join";
