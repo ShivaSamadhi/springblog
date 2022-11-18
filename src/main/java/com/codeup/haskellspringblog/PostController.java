@@ -16,7 +16,9 @@ public class PostController {
     public String posts(Model model){
         List<Post> allPosts = new ArrayList<>();
         Post newPost = new Post(1, "Swag", "Hopped up out the bed. Turned my swag on. Took a look in the mirror, said wassup.");
+        Post singlePost = new Post(2, "Another One", "It goes on and on. Cant understand how I code so long.");
         allPosts.add(newPost);
+        allPosts.add(singlePost);
         model.addAttribute("allPosts", allPosts);
         return "posts/index";
     }
