@@ -1,5 +1,6 @@
 package com.codeup.haskellspringblog.models;
 
+
 import javax.persistence.*;
 
 @Entity
@@ -14,5 +15,13 @@ public class Ad {
 
     @Column(nullable = false)
     private String description;
+
+    @OneToOne
+    private User owner;
+    //Mapping a one-to-one relationship with JPA is as easy as adding the @OneToOne annotation. Following our example, ads belong to a single User.
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ad")
+    private List<AdImage> images;
+    //A many-to-one association and a one-to-many association are the same association seen from the perspective of the owning and subordinate entities, respectively. Going back to our Ad class, an ad can have several images; we can map this as a bidirectional association
 
 }
