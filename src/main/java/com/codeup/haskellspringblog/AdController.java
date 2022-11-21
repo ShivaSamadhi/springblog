@@ -17,4 +17,6 @@ public class AdController {
         model.addAttribute("ads", adDao.findAll());
         return "ads/index";
     }
+
+    //We can use dependency injection in most of the classes in our Spring application. We can even inject services into other services! This is how you can use it in order to get the list of all Ads.
 }
