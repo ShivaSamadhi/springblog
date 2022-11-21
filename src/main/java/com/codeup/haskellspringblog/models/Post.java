@@ -1,8 +1,18 @@
-package com.codeup.haskellspringblog;
+package com.codeup.haskellspringblog.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "posts")
 public class Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column
     private String title;
+    @Column
     private String body;
 
     public Post(){}

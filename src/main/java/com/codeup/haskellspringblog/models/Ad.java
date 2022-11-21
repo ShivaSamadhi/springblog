@@ -1,4 +1,4 @@
-package com.codeup.haskellspringblog;
+package com.codeup.haskellspringblog.models;
 
 import javax.persistence.*;
 

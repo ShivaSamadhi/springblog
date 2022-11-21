@@ -1,5 +1,6 @@
-package com.codeup.haskellspringblog;
+package com.codeup.haskellspringblog.controllers;
 
+import com.codeup.haskellspringblog.models.Post;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

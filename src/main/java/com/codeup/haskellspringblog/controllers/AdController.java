@@ -1,5 +1,6 @@
-package com.codeup.haskellspringblog;
+package com.codeup.haskellspringblog.controllers;
 
+import com.codeup.haskellspringblog.repositories.AdRepository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -19,4 +20,5 @@ public class AdController {
     }
 
     //We can use dependency injection in most of the classes in our Spring application. We can even inject services into other services! This is how you can use it in order to get the list of all Ads.
+    //By extending JpaRepository, we inherit the CRUD functionality that the Spring framework provides, including methods for retrieving an Iterable Interface1 with all the ads (findAll), a specific ad (getById), inserting or updating an ad (save), and deleting an ad (delete).
 }
