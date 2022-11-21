@@ -1,6 +1,7 @@
 package com.codeup.haskellspringblog.controllers;
 
 import com.codeup.haskellspringblog.models.Post;
+import com.codeup.haskellspringblog.repositories.PostRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,12 @@ import java.util.List;
 
 @Controller
 public class PostController {
+    private final PostRepository postDao;
+
+    public PostController(PostRepository postDao) {
+        this.postDao = postDao;
+    }
+
     @GetMapping("/posts")
     public String posts(Model model){
         List<Post> allPosts = new ArrayList<>();
