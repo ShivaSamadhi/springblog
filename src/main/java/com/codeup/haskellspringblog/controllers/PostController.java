@@ -6,10 +6,13 @@ import com.codeup.haskellspringblog.repositories.PostRepository;
 import com.codeup.haskellspringblog.repositories.UserReposiitory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PostController {
@@ -24,16 +27,21 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public String posts(Model model){
-        List<Post> allPosts = postDao.findAll();
-        model.addAttribute("allPosts", allPosts);
+    public String getPosts(Model vModel) {
+        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+            User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User loggedInUser = userDao.findById(principal.getId()).get();
+            vModel.addAttribute("user", loggedInUser);
+        }
+        List<Post> posts = postDao.findAll();
+        vModel.addAttribute("posts", posts);
         return "posts/index";
     }
 
     @GetMapping("/posts/{id}")
-    public String singlePost(@PathVariable long id, Model model){
-        Post singlePost = new Post(id, "Another One", "It goes on and on. Cant understand how I code so long.");
-        model.addAttribute("post", singlePost);
+    public String getPost(@PathVariable long id, Model vModel) {
+        Post post = postDao.findById(id).get();
+        vModel.addAttribute("post", post);
         return "posts/show";
     }
 
@@ -41,6 +49,42 @@ public class PostController {
     public String viewCreate(Model model){
         model.addAttribute("post", new Post());
         return "posts/create";
+    }
+
+    @PostMapping("/posts/create")
+    public String savePost(@Valid Post post, Errors validation, Model model) {
+        if (validation.hasErrors()) {
+            model.addAttribute("errors", validation);
+            model.addAttribute("post", post);
+            return "posts/create";
+        }
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        post.setUser(principal);
+        postDao.save(post);
+        emailService.prepareAndSend(post, "You created a new post!");
+        return "redirect:/posts?created";
+    }
+
+    @GetMapping("/posts/{id}/edit")
+    public String showEditForm(@PathVariable long id, Model model) {
+        Post post = postDao.findById(id).get();
+        model.addAttribute("post", post);
+        return "posts/edit";
+    }
+
+    @PostMapping("/posts/{id}/edit")
+    public String submitEditForm(@Valid Post postUpdates, Errors validation, Model model) {
+        if (validation.hasErrors()) {
+            model.addAttribute("errors", validation);
+            model.addAttribute("post", postUpdates);
+            return "posts/edit";
+        }
+        Optional<Post> postToUpdate = postDao.findById(postUpdates.getId());
+        Post post = postToUpdate.get();
+        post.setTitle(postUpdates.getTitle());
+        post.setBody(postUpdates.getBody());
+        postDao.save(post);
+        return "redirect:/posts?edited";
     }
 
 //    @PostMapping("/posts/create")
