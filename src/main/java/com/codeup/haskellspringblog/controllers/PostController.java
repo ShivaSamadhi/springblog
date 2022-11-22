@@ -15,10 +15,12 @@ import java.util.List;
 public class PostController {
     private PostRepository postDao;
     private UserReposiitory userDao;
+    private final EmailService emailService;
 
-    public PostController(PostRepository postDao, UserReposiitory userDao) {
+    public PostController(PostRepository postDao, UserReposiitory userDao, EmailService emailService) {
         this.postDao = postDao;
         this.userDao = userDao;
+        this.emailService = emailService;
     }
 
     @GetMapping("/posts")
