@@ -1,4 +1,4 @@
-package com.example.haskellspringblog.models;
+package com.codeup.haskellspringblog.models;
 
 import javax.persistence.*;
 import java.util.List;

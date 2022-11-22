@@ -1,7 +1,9 @@
 package com.codeup.haskellspringblog.controllers;
 
 import com.codeup.haskellspringblog.models.Post;
+import com.codeup.haskellspringblog.models.User;
 import com.codeup.haskellspringblog.repositories.PostRepository;
+import com.codeup.haskellspringblog.repositories.UserReposiitory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +13,12 @@ import java.util.List;
 
 @Controller
 public class PostController {
-    private final PostRepository postDao;
+    private PostRepository postDao;
+    private UserReposiitory userDao;
 
-    public PostController(PostRepository postDao) {
+    public PostController(PostRepository postDao, UserReposiitory userDao) {
         this.postDao = postDao;
+        this.userDao = userDao;
     }
 
     @GetMapping("/posts")
@@ -32,16 +36,26 @@ public class PostController {
     }
 
     @GetMapping("/posts/create")
-    public String viewCreate(){
+    public String viewCreate(Model model){
+        model.addAttribute("post", new Post());
         return "posts/create";
     }
 
-    @PostMapping("/posts/create")
-    public String createPosts(@RequestParam(name = "title")String title, @RequestParam(name = "body")String body){
-        Post post = new Post();
-        post.setTitle(title);
-        post.setBody(body);
-        postDao.save(post);
-        return "redirect:/posts";
+//    @PostMapping("/posts/create")
+//    public String createPosts(@RequestParam(name = "title")String title, @RequestParam(name = "body")String body){
+//        Post post = new Post();
+//        post.setTitle(title);
+//        post.setBody(body);
+//        postDao.save(post);
+//        return "redirect:/posts";
+//    }
+
+    @PostMapping("/posts/create"){
+        public String create(@ModelAttribute Post post){
+            User user = userDao.getById(1L);
+            post.setUser(user);
+            postDao.save(post);
+            return "redirect:/posts";
+        }
     }
 }
