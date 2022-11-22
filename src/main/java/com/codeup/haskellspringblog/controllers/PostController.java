@@ -3,13 +3,12 @@ package com.codeup.haskellspringblog.controllers;
 import com.codeup.haskellspringblog.models.Post;
 import com.codeup.haskellspringblog.models.User;
 import com.codeup.haskellspringblog.repositories.PostRepository;
-import com.codeup.haskellspringblog.repositories.UserReposiitory;
+import com.codeup.haskellspringblog.repositories.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -17,10 +16,10 @@ import java.util.Optional;
 @Controller
 public class PostController {
     private PostRepository postDao;
-    private UserReposiitory userDao;
+    private UserRepository userDao;
     private final EmailService emailService;
 
-    public PostController(PostRepository postDao, UserReposiitory userDao, EmailService emailService) {
+    public PostController(PostRepository postDao, UserRepository userDao, EmailService emailService) {
         this.postDao = postDao;
         this.userDao = userDao;
         this.emailService = emailService;
@@ -87,21 +86,21 @@ public class PostController {
         return "redirect:/posts?edited";
     }
 
-//    @PostMapping("/posts/create")
-//    public String createPosts(@RequestParam(name = "title")String title, @RequestParam(name = "body")String body){
-//        Post post = new Post();
-//        post.setTitle(title);
-//        post.setBody(body);
-//        postDao.save(post);
-//        return "redirect:/posts";
-//    }
-
-    @PostMapping("/posts/create"){
-        public String create(@ModelAttribute Post post){
-            User user = userDao.getById(1L);
-            post.setUser(user);
-            postDao.save(post);
-            return "redirect:/posts";
-        }
+    @PostMapping("/posts/{id}/delete")
+    public String deletePost(@PathVariable long id) {
+        postDao.deleteById(id);
+        return "redirect:/posts";
     }
+
+    @PostMapping("/posts/{id}/like")
+    @ResponseBody
+    public String likeUnlikePost(@PathVariable long id) {
+        Post post = postDao.findById(id).get();
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userThatLiked = userDao.findById(principal.getId()).get();
+        post.toggleUserLike(userThatLiked);
+        postDao.save(post);
+        return "Post liked!";
+    }
+
 }
