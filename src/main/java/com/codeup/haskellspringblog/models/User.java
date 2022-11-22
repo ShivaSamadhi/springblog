@@ -1,36 +1,61 @@
 package com.codeup.haskellspringblog.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    @Size(min = 2, message = "Username must be at least 2 characters long")
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Email
     private String email;
 
     @Column(nullable = false)
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Post> post;
+    private List<Post> posts = new ArrayList<>();
 
-    public User(){}
+    @ManyToMany(mappedBy = "usersThatLiked")
+    private List<Post> likedPosts = new ArrayList<>();
 
-    public User(long id, String username, String email, String password, List<Post> post) {
-        this.id = id;
+    public List<Post> getLikedPosts() {
+        return likedPosts;
+    }
+
+    public void setLikedPosts(List<Post> likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
+    public User() {
+    }
+
+    public User(User copy) {
+        id = copy.id; // This line is SUPER important! Many things won't work if it's absent
+        email = copy.email;
+        username = copy.username;
+        password = copy.password;
+    }
+
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.post = post;
+    }
+
+    public boolean hasLikedPost(Post post) {
+        return post.containsId(post.getUserThatLiked(), this.id);
     }
 
     public long getId() {
@@ -65,11 +90,12 @@ public class User {
         this.password = password;
     }
 
-    public List<Post> getPost() {
-        return post;
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    public void setPost(List<Post> post) {
-        this.post = post;
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
+
 }
