@@ -5,7 +5,6 @@ import com.codeup.haskellspringblog.repositories.AdRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
 public class HomeController {
 
     private final AdRepository adsDao;
-    // Anytime this controller is used, inject the adsDao so we can use it!
+
     public HomeController(AdRepository adsDao) {
         this.adsDao = adsDao;
     }

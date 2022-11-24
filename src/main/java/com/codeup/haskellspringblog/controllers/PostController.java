@@ -4,6 +4,8 @@ import com.codeup.haskellspringblog.models.Post;
 import com.codeup.haskellspringblog.models.User;
 import com.codeup.haskellspringblog.repositories.PostRepository;
 import com.codeup.haskellspringblog.repositories.UserRepository;
+import com.codeup.haskellspringblog.services.EmailService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
